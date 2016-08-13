@@ -1,0 +1,19 @@
+<!--
+  ~ /*
+  ~ * Copyright (c) 2016 Speakgame
+  ~ * All rights reserved.
+  ~ *
+  ~ * This software is a confidential and proprietary information of Speakgame.
+  ~ * ("Confidential Information").  You shall not disclose such
+  ~ * Confidential Information and shall use it only in accordance with the terms
+  ~ * of the license agreement you entered into with Speakgame.
+  ~ */
+  ~
+  -->
+
+<resources>
+    <string name="app_name">Marvel</string>
+
+    <string name="hello_world">Olá Mundo!</string>
+    <string name="action_settings">Settings</string>
+</resources>

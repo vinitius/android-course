@@ -1,0 +1,19 @@
+<!--
+  ~ /*
+  ~ * Copyright (c) 2016 Speakgame
+  ~ * All rights reserved.
+  ~ *
+  ~ * This software is a confidential and proprietary information of Speakgame.
+  ~ * ("Confidential Information").  You shall not disclose such
+  ~ * Confidential Information and shall use it only in accordance with the terms
+  ~ * of the license agreement you entered into with Speakgame.
+  ~ */
+  ~
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context="br.com.marvel.WelcomeActivity">
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="never" />
+</menu>

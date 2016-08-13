@@ -1,0 +1,39 @@
+/*
+ *
+ *  Copyright (c) 2016 Speakgame
+ *  All rights reserved.
+ *
+ *  This software is a confidential and proprietary information of Speakgame.
+ *  ("Confidential Information").  You shall not disclose such
+ *  Confidential Information and shall use it only in accordance with the terms
+ *  of the license agreement you entered into with Speakgame.
+ * /
+ *
+ */
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "br.com.marvel"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.github.vinitius:leslie:+'
+}
