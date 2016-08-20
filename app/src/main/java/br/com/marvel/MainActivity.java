@@ -15,71 +15,78 @@ package br.com.marvel;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import br.com.marvel.listener.OnUserSelectListener;
 import br.com.marvel.model.User;
+import br.com.marvel.view.DetailsFragment;
+import br.com.marvel.view.MainFragment;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnUserSelectListener{
 
 
-    private EditText edit;
-    private Button button;
-
+    private MainFragment mainFragment;
+    private DetailsFragment detailsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        edit = (EditText)findViewById(R.id.edit);
-        button = (Button)findViewById(R.id.entrar);
+        FragmentTransaction mainTransaction =
+                getSupportFragmentManager().beginTransaction();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,WelcomeActivity.class);
-                User user = new User();
-                user.setName(edit.getText().toString());
-                intent.putExtra("KEY", user);
-                startActivity(intent);
-            }
-        });
+        mainFragment = new MainFragment();
 
-    }
+        mainTransaction.replace(R.id.content, mainFragment);
+        mainTransaction.commit();
+
+        if (getResources().getBoolean(R.bool.is_landscape)){
+            FragmentTransaction detailsTransaction = getSupportFragmentManager()
+                    .beginTransaction();
+
+            detailsFragment = new DetailsFragment();
+
+            detailsTransaction.replace(R.id.contentDetails, detailsFragment);
+            detailsTransaction.commit();
+
+        }
 
 
 
-    @Override
-    public void onBackPressed() {
-        final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.hello_world)
-                .setMessage("Deseja mesmo sair?")
-                .setPositiveButton("Sair", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        MainActivity.super.onBackPressed();
-                    }
-                })
-                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
-                .create();
-
-        dialog.show();
 
     }
+
+
+
+//    @Override
+//    public void onBackPressed() {
+//        final AlertDialog dialog = new AlertDialog.Builder(this)
+//                .setTitle(R.string.hello_world)
+//                .setMessage("Deseja mesmo sair?")
+//                .setPositiveButton("Sair", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        MainActivity.super.onBackPressed();
+//                    }
+//                })
+//                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.dismiss();
+//                    }
+//                })
+//                .create();
+//
+//        dialog.show();
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,5 +112,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         return true;
+    }
+
+    @Override
+    public void onUserSelect(User user) {
+
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction();
+
+        DetailsFragment details = new DetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("USER", user);
+        details.setArguments(bundle);
+
+        if (getResources().getBoolean(R.bool.is_landscape)) {
+            transaction.replace(R.id.contentDetails, details);
+        }else {
+            transaction.replace(R.id.content, details);
+            transaction.addToBackStack("DETAILS");
+        }
+
+        transaction.commit();
+
+
     }
 }

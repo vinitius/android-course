@@ -1,0 +1,58 @@
+<!--
+  ~ /*
+  ~ * Copyright (c) 2016 Speakgame
+  ~ * All rights reserved.
+  ~ *
+  ~ * This software is a confidential and proprietary information of Speakgame.
+  ~ * ("Confidential Information").  You shall not disclose such
+  ~ * Confidential Information and shall use it only in accordance with the terms
+  ~ * of the license agreement you entered into with Speakgame.
+  ~ */
+  ~
+  -->
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        >
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            >
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_weight="10"
+            android:id="@+id/contentDetails"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
+
+
+

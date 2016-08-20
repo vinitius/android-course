@@ -2,23 +2,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
-
-    <EditText
-        android:id="@+id/edit"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Informe o seu nome"
-        />
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        >
 
-    <Button
-        android:id="@+id/entrar"
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Entrar"/>
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
 
 
 
