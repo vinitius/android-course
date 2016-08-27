@@ -13,6 +13,7 @@
 
 package br.com.marvel.view;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.com.marvel.R;
+import br.com.marvel.adapter.CharacterAdapter;
 import br.com.marvel.connection.RestClient;
 import br.com.marvel.listener.OnUserSelectListener;
 import br.com.marvel.model.Character;
@@ -87,23 +89,30 @@ public class MainFragment extends Fragment {
         HashMap<String,String> params = new HashMap<>();
         long ts = new Date().getTime();
         params.put("ts", String.valueOf(ts));
-        params.put("hash",md5(ts+RestClient.PRIVATE_KEY+RestClient.PUBLIC_KEY));
+        params.put("hash", md5(ts + RestClient.PRIVATE_KEY + RestClient.PUBLIC_KEY));
+
+        final ProgressDialog loading = ProgressDialog.show(getActivity()
+                ,"Aguarde"
+                ,"Alinhando Satélites..."
+                ,true);
 
         restClient.loadCharacters(params, new Callback<ResponseWrapper>() {
             @Override
             public void success(ResponseWrapper responseWrapper, Response response) {
 
                 List<Character> characters = responseWrapper.getData().getResults();
-                ArrayAdapter<br.com.marvel.model.Character> adapter =
-                        new ArrayAdapter<Character>(getActivity()
-                                , android.R.layout.simple_list_item_1
-                                , characters);
+                CharacterAdapter adapter =
+                        new CharacterAdapter(characters,getActivity());
                 list.setAdapter(adapter);
+                loading.dismiss();
+
+
 
             }
 
             @Override
             public void failure(RetrofitError error) {
+                loading.dismiss();
                 error.printStackTrace();
                 Toast.makeText(getActivity()
                         , "Erro na conexão. Verifique sua internet."

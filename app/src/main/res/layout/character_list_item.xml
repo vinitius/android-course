@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*
+  ~ * Copyright (c) 2016 Speakgame
+  ~ * All rights reserved.
+  ~ *
+  ~ * This software is a confidential and proprietary information of Speakgame.
+  ~ * ("Confidential Information").  You shall not disclose such
+  ~ * Confidential Information and shall use it only in accordance with the terms
+  ~ * of the license agreement you entered into with Speakgame.
+  ~ */
+  ~
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@mipmap/ic_launcher"
+        android:scaleType="fitXY"
+        />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Personagem Marvel"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_gravity="bottom"
+        android:background="#80000000"
+        android:textColor="#FFFFFF"
+        android:padding="5dp"
+        />
+
+</FrameLayout>

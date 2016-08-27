@@ -18,7 +18,6 @@ import java.util.Map;
 import br.com.marvel.model.ResponseWrapper;
 import retrofit.Callback;
 import retrofit.http.GET;
-import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 /**
@@ -31,7 +30,7 @@ public interface RestClient {
     String PRIVATE_KEY = "5d7926a0d59f3409df891e26a2219c7240e4e820";
     String PUBLIC_KEY = "d932150383390c4326fd11bc14308ed7";
 
-    @GET("/characters?limit=5&offset=5&apikey=d932150383390c4326fd11bc14308ed7")
+    @GET("/characters?limit=15&offset=15&apikey=d932150383390c4326fd11bc14308ed7")
     void loadCharacters(@QueryMap Map<String,String> params, Callback<ResponseWrapper> cb);
 
 }

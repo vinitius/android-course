@@ -37,4 +37,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.github.vinitius:leslie:+'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }

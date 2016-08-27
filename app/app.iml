@@ -99,5 +99,6 @@
     <orderEntry type="library" exported="" name="support-v4-24.0.0" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.9.0" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-24.0.0" level="project" />
+    <orderEntry type="library" exported="" name="glide-3.7.0" level="project" />
   </component>
 </module>
