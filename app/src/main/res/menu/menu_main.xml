@@ -1,15 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    >
 
 
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+    <item android:id="@+id/phone" android:title="Ligar"
         android:orderInCategory="100" app:showAsAction="never" />
 
-    <item android:id="@+id/action_ok" android:title="ok"
+    <item android:id="@+id/photo" android:title="Tirar Foto"
         android:orderInCategory="100" app:showAsAction="never" />
 
-    <item android:id="@+id/action_no" android:title="no"
+    <item android:id="@+id/save" android:title="Favoritar"
         android:orderInCategory="100" app:showAsAction="never" />
+
 
 </menu>

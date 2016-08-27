@@ -15,13 +15,14 @@ package br.com.marvel.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,18 +30,17 @@ import com.google.gson.Gson;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import br.com.marvel.MainActivity;
 import br.com.marvel.R;
 import br.com.marvel.adapter.CharacterAdapter;
 import br.com.marvel.connection.RestClient;
-import br.com.marvel.listener.OnUserSelectListener;
+import br.com.marvel.listener.OnCharacterSelectListener;
 import br.com.marvel.model.Character;
 import br.com.marvel.model.ResponseWrapper;
-import br.com.marvel.model.User;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -54,14 +54,14 @@ public class MainFragment extends Fragment {
 
 
     private ListView list;
-    private OnUserSelectListener listener;
+    private OnCharacterSelectListener listener;
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnUserSelectListener){
-            listener = (OnUserSelectListener)context;
+        if (context instanceof OnCharacterSelectListener){
+            listener = (OnCharacterSelectListener)context;
         }
     }
 
@@ -76,7 +76,18 @@ public class MainFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((MainActivity)getActivity()).getToolbar().setTitle("Marvel Acervo");
+        ((MainActivity)getActivity()).getToolbar().setTitleTextColor(Color.WHITE);
+
+
         list = (ListView)view.findViewById(R.id.list);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                listener.onCharacterSelect((Character) adapterView.getItemAtPosition(i));
+            }
+        });
 
 
         RestClient restClient = new RestAdapter.Builder()
@@ -95,6 +106,8 @@ public class MainFragment extends Fragment {
                 ,"Aguarde"
                 ,"Alinhando Satélites..."
                 ,true);
+
+
 
         restClient.loadCharacters(params, new Callback<ResponseWrapper>() {
             @Override

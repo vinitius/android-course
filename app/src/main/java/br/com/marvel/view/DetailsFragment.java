@@ -13,16 +13,33 @@
 
 package br.com.marvel.view;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
+
+import br.com.marvel.MainActivity;
 import br.com.marvel.R;
-import br.com.marvel.model.User;
+import br.com.marvel.model.Character;
 
 /**
  * Created by vinitius on 8/20/16.
@@ -31,6 +48,9 @@ public class DetailsFragment extends Fragment {
 
 
     private TextView text;
+    private ImageView image;
+    private br.com.marvel.model.Character character;
+
 
     @Nullable
     @Override
@@ -41,14 +61,82 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         text = (TextView)view.findViewById(R.id.text);
+        image = (ImageView)view.findViewById(R.id.img);
 
         if (getArguments() != null){
-            User user = (User) getArguments().getSerializable("USER");
-            text.setText(user.getName());
+            character = (Character) getArguments().getSerializable("CHARACTER");
+            ((MainActivity)getActivity())
+                    .getToolbar().setTitle(character.getName());
+            text.setText(character.getDescription().isEmpty()
+            ? "- Sem Descrição -"
+            : character.getDescription());
+
+            String url = character.getThumbnail().getPath()
+                    +"."+character.getThumbnail().getExtension();
+            Glide.with(getActivity()).load(url).into(image);
         }
+
+
+        setHasOptionsMenu(true);
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main,menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.phone){
+            Intent intent = new Intent(Intent.ACTION_DIAL
+                    , Uri.parse("tel:"+character.getPhone()));
+            startActivity(intent);
+
+        }else if (item.getItemId() == R.id.photo){
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, 111);
+        }else if (item.getItemId() == R.id.save){
+            try {
+                Dao<Character,String> dao =
+                        ((MainActivity)getActivity())
+                                .getDbHelper()
+                                .getDao(Character.class);
+                dao.createOrUpdate(character);
+                Toast.makeText(getActivity()
+                ,"Salvo com sucesso!",Toast.LENGTH_LONG)
+                        .show();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity()
+                        ,"Falha ao gravar registro!",Toast.LENGTH_LONG)
+                        .show();
+            }
+
+        }
+
+
+
+        return true;
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 111){
+            if (resultCode == Activity.RESULT_OK){
+                Bitmap bitmap =  (Bitmap)data.getExtras().get("data");
+                image.setImageBitmap(bitmap);
+            }else{
+
+            }
+        }
+
+    }
 }

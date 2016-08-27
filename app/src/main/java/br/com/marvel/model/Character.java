@@ -13,17 +13,42 @@
 
 package br.com.marvel.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
 /**
  * Created by vinitius on 8/20/16.
  */
+@DatabaseTable
 public class Character implements Serializable {
 
+    @DatabaseField(id = true)
     private String id;
+    @DatabaseField
     private String name;
+    @DatabaseField
     private String description;
+    @DatabaseField
+    private String phone;
+
+    @DatabaseField(useGetSet = true)
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return getThumbnail().getPath()+"."+getThumbnail().getExtension();
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     private Thumbnail thumbnail;
+
+    public Character(){
+        setPhone("92 991325643");
+    }
 
     @Override
     public String toString() {
@@ -60,6 +85,14 @@ public class Character implements Serializable {
 
     public void setThumbnail(Thumbnail thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public static class Thumbnail implements Serializable{

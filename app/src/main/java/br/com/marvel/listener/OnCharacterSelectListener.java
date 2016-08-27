@@ -13,13 +13,11 @@
 
 package br.com.marvel.listener;
 
-import br.com.marvel.model.User;
-
 /**
  * Created by vinitius on 8/20/16.
  */
-public interface OnUserSelectListener {
+public interface OnCharacterSelectListener {
 
-    void onUserSelect(User user);
+    void onCharacterSelect(br.com.marvel.model.Character character);
 
 }

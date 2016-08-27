@@ -13,31 +13,33 @@
 
 package br.com.marvel;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
-import br.com.marvel.listener.OnUserSelectListener;
-import br.com.marvel.model.User;
+import br.com.marvel.db.DatabaseHelper;
+import br.com.marvel.listener.OnCharacterSelectListener;
 import br.com.marvel.view.DetailsFragment;
 import br.com.marvel.view.MainFragment;
 
 
-public class MainActivity extends AppCompatActivity implements OnUserSelectListener{
+public class MainActivity extends AppCompatActivity implements OnCharacterSelectListener {
 
 
     private MainFragment mainFragment;
     private DetailsFragment detailsFragment;
+    private Toolbar toolbar;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        dbHelper = new DatabaseHelper(this);
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         FragmentTransaction mainTransaction =
                 getSupportFragmentManager().beginTransaction();
@@ -88,41 +90,16 @@ public class MainActivity extends AppCompatActivity implements OnUserSelectListe
 //
 //    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-
-
-        return true;
-    }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.action_settings:
-                Toast.makeText(this,"Menu selecionado.", Toast.LENGTH_LONG).show();
-                break;
-            default:
-                break;
-
-        }
-
-
-        return true;
-    }
-
-    @Override
-    public void onUserSelect(User user) {
+    public void onCharacterSelect(br.com.marvel.model.Character character) {
 
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
 
         DetailsFragment details = new DetailsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("USER", user);
+        bundle.putSerializable("CHARACTER", character);
         details.setArguments(bundle);
 
         if (getResources().getBoolean(R.bool.is_landscape)) {
@@ -135,5 +112,21 @@ public class MainActivity extends AppCompatActivity implements OnUserSelectListe
         transaction.commit();
 
 
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    public void setToolbar(Toolbar toolbar) {
+        this.toolbar = toolbar;
+    }
+
+    public DatabaseHelper getDbHelper() {
+        return dbHelper;
+    }
+
+    public void setDbHelper(DatabaseHelper dbHelper) {
+        this.dbHelper = dbHelper;
     }
 }

@@ -19,12 +19,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.j256.ormlite.dao.Dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import br.com.marvel.MainActivity;
 import br.com.marvel.R;
 import br.com.marvel.model.Character;
 
@@ -83,6 +87,25 @@ public class CharacterAdapter extends BaseAdapter {
                 .error(R.mipmap.ic_launcher)
                 .into(holder.img);
 
+
+        try {
+            Dao<Character,String> dao =
+                    ((MainActivity)context)
+                            .getDbHelper()
+                            .getDao(Character.class);
+
+            if (dao.queryForSameId(getItem(i)) != null){
+                holder.fav.setVisibility(View.VISIBLE);
+            }else{
+                holder.fav.setVisibility(View.INVISIBLE);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            holder.fav.setVisibility(View.INVISIBLE);
+        }
+
         return view;
     }
 
@@ -91,10 +114,12 @@ public class CharacterAdapter extends BaseAdapter {
     public static class CharacterHolder{
         TextView name;
         ImageView img;
+        RatingBar fav;
 
         public CharacterHolder(View view){
             name = (TextView)view.findViewById(R.id.name);
             img = (ImageView)view.findViewById(R.id.img);
+            fav = (RatingBar)view.findViewById(R.id.fav);
 
         }
 
