@@ -14,9 +14,11 @@
 package br.com.marvel;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import br.com.marvel.db.DatabaseHelper;
 import br.com.marvel.listener.OnCharacterSelectListener;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements OnCharacterSelect
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
         FragmentTransaction mainTransaction =
                 getSupportFragmentManager().beginTransaction();
 
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnCharacterSelect
         mainTransaction.replace(R.id.content, mainFragment);
         mainTransaction.commit();
 
-        if (getResources().getBoolean(R.bool.is_landscape)){
+        if (getResources().getBoolean(R.bool.is_landscape)) {
             FragmentTransaction detailsTransaction = getSupportFragmentManager()
                     .beginTransaction();
 
@@ -59,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements OnCharacterSelect
             detailsTransaction.commit();
 
         }
+
+
+
+
 
 
 
@@ -103,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnCharacterSelect
         details.setArguments(bundle);
 
         if (getResources().getBoolean(R.bool.is_landscape)) {
-            transaction.replace(R.id.contentDetails, details);
+            transaction.replace(R.id.contentDetails, details, "DETAILS");
         }else {
             transaction.replace(R.id.content, details);
             transaction.addToBackStack("DETAILS");

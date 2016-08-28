@@ -19,7 +19,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,9 +31,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.j256.ormlite.dao.Dao;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,10 +56,11 @@ import retrofit.converter.GsonConverter;
 /**
  * Created by vinitius on 8/20/16.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
 
     private ListView list;
+    private SwipeRefreshLayout swipe;
     private OnCharacterSelectListener listener;
 
 
@@ -64,6 +71,7 @@ public class MainFragment extends Fragment {
             listener = (OnCharacterSelectListener)context;
         }
     }
+
 
     @Nullable
     @Override
@@ -79,8 +87,10 @@ public class MainFragment extends Fragment {
         ((MainActivity)getActivity()).getToolbar().setTitle("Marvel Acervo");
         ((MainActivity)getActivity()).getToolbar().setTitleTextColor(Color.WHITE);
 
-
         list = (ListView)view.findViewById(R.id.list);
+        swipe = (SwipeRefreshLayout)view.findViewById(R.id.swipe);
+
+        swipe.setOnRefreshListener(this);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -89,50 +99,38 @@ public class MainFragment extends Fragment {
             }
         });
 
+        setHasOptionsMenu(true);
 
-        RestClient restClient = new RestAdapter.Builder()
-                .setEndpoint(RestClient.BASE_URL)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setConverter(new GsonConverter(new Gson()))
-                .build()
-                .create(RestClient.class);
+        onRefresh();
 
-        HashMap<String,String> params = new HashMap<>();
-        long ts = new Date().getTime();
-        params.put("ts", String.valueOf(ts));
-        params.put("hash", md5(ts + RestClient.PRIVATE_KEY + RestClient.PUBLIC_KEY));
+    }
 
-        final ProgressDialog loading = ProgressDialog.show(getActivity()
-                ,"Aguarde"
-                ,"Alinhando Satélites..."
-                ,true);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fav,menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
+        if (item.getItemId() == R.id.fav){
+            loadFavorites();
+        }
 
-        restClient.loadCharacters(params, new Callback<ResponseWrapper>() {
-            @Override
-            public void success(ResponseWrapper responseWrapper, Response response) {
+        return true;
+    }
 
-                List<Character> characters = responseWrapper.getData().getResults();
-                CharacterAdapter adapter =
-                        new CharacterAdapter(characters,getActivity());
-                list.setAdapter(adapter);
-                loading.dismiss();
-
-
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                loading.dismiss();
-                error.printStackTrace();
-                Toast.makeText(getActivity()
-                        , "Erro na conexão. Verifique sua internet."
-                        , Toast.LENGTH_LONG).show();
-
-            }
-        });
+    private void loadFavorites(){
+        try {
+            Dao<Character,String> dao = ((MainActivity)getActivity())
+                    .getDbHelper().getDao(Character.class);
+            List<Character> characters = dao.queryForAll();
+            CharacterAdapter adapter = new
+                    CharacterAdapter(characters,getActivity());
+            list.setAdapter(adapter);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -159,5 +157,61 @@ public class MainFragment extends Fragment {
             e.printStackTrace();
         }
         return "";
+    }
+
+    @Override
+    public void onRefresh() {
+        swipe.post(new Runnable() {
+            @Override
+            public void run() {
+                swipe.setRefreshing(true);
+            }
+        });
+        RestClient restClient = new RestAdapter.Builder()
+                .setEndpoint(RestClient.BASE_URL)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setConverter(new GsonConverter(new Gson()))
+                .build()
+                .create(RestClient.class);
+
+        HashMap<String,String> params = new HashMap<>();
+        long ts = new Date().getTime();
+        params.put("ts", String.valueOf(ts));
+        params.put("hash", md5(ts + RestClient.PRIVATE_KEY + RestClient.PUBLIC_KEY));
+
+        restClient.loadCharacters(params, new Callback<ResponseWrapper>() {
+            @Override
+            public void success(ResponseWrapper responseWrapper, Response response) {
+
+                List<Character> characters = responseWrapper.getData().getResults();
+                CharacterAdapter adapter =
+                        new CharacterAdapter(characters, getActivity());
+                list.setAdapter(adapter);
+                swipe.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipe.setRefreshing(false);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                swipe.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipe.setRefreshing(false);
+                    }
+                });
+                error.printStackTrace();
+                Toast.makeText(getActivity()
+                        , "Erro na conexão."
+                        , Toast.LENGTH_LONG).show();
+
+            }
+        });
+
     }
 }

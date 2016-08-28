@@ -36,8 +36,13 @@ public class Character implements Serializable {
     @DatabaseField(useGetSet = true)
     private String imageUrl;
 
+
+
     public String getImageUrl() {
-        return getThumbnail().getPath()+"."+getThumbnail().getExtension();
+
+        return getThumbnail() != null
+                ? getThumbnail().getPath()+"."+getThumbnail().getExtension()
+                : imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {

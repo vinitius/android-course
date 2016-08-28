@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -70,24 +71,32 @@ public class DetailsFragment extends Fragment {
             ((MainActivity)getActivity())
                     .getToolbar().setTitle(character.getName());
             text.setText(character.getDescription().isEmpty()
-            ? "- Sem Descrição -"
-            : character.getDescription());
+                    ? "- Sem Descrição -"
+                    : character.getDescription());
 
-            String url = character.getThumbnail().getPath()
-                    +"."+character.getThumbnail().getExtension();
+            String url = character.getThumbnail() != null
+                    ?character.getThumbnail().getPath()
+                    +"."+character.getThumbnail().getExtension()
+
+                    :character.getImageUrl();
+
             Glide.with(getActivity()).load(url).into(image);
         }
 
 
         setHasOptionsMenu(true);
 
+
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
         inflater.inflate(R.menu.menu_main,menu);
     }
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

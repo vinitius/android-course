@@ -78,8 +78,12 @@ public class CharacterAdapter extends BaseAdapter {
 
         holder.name.setText(getItem(i).getName());
 
-        String url = getItem(i).getThumbnail().getPath()
-                + "."+getItem(i).getThumbnail().getExtension();
+        String url = getItem(i).getThumbnail() != null
+                ? getItem(i).getThumbnail().getPath()
+                + "." + getItem(i).getThumbnail().getExtension()
+
+                : getItem(i).getImageUrl();
+
 
         Glide.with(context)
                 .load(url)
