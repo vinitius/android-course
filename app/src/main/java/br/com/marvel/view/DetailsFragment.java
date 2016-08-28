@@ -16,13 +16,11 @@ package br.com.marvel.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +36,7 @@ import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 
+import br.com.marvel.LocationActivity;
 import br.com.marvel.MainActivity;
 import br.com.marvel.R;
 import br.com.marvel.model.Character;
@@ -116,15 +115,21 @@ public class DetailsFragment extends Fragment {
                                 .getDbHelper()
                                 .getDao(Character.class);
                 dao.createOrUpdate(character);
-                Toast.makeText(getActivity()
-                ,"Salvo com sucesso!",Toast.LENGTH_LONG)
-                        .show();
-            } catch (SQLException e) {
+                Intent intent = new Intent();
+                intent.setAction("br.com.marvel.SAVED");
+                intent.putExtra("NAME", character.getName());
+                getActivity().sendBroadcast(intent);
+            } catch (SQLException e){
                 e.printStackTrace();
                 Toast.makeText(getActivity()
                         ,"Falha ao gravar registro!",Toast.LENGTH_LONG)
                         .show();
             }
+
+        }else if (item.getItemId() == R.id.maps){
+            Intent intent =
+                    new Intent(getActivity(), LocationActivity.class);
+            startActivity(intent);
 
         }
 

@@ -12,5 +12,8 @@
     <item android:id="@+id/save" android:title="Favoritar"
         android:orderInCategory="100" app:showAsAction="never" />
 
+    <item android:id="@+id/maps" android:title="Ver no Mapa"
+        android:orderInCategory="100" app:showAsAction="never" />
+
 
 </menu>

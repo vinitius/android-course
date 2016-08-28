@@ -13,12 +13,17 @@
 
 package br.com.marvel;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.View;
+
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import br.com.marvel.db.DatabaseHelper;
 import br.com.marvel.listener.OnCharacterSelectListener;
@@ -42,6 +47,22 @@ public class MainActivity extends AppCompatActivity implements OnCharacterSelect
         dbHelper = new DatabaseHelper(this);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        new DrawerBuilder().withActivity(this)
+                .withToolbar(toolbar)
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int i, IDrawerItem iDrawerItem) {
+                        if (i == 0){
+                            Intent intent = new
+                                    Intent(MainActivity.this,WelcomeActivity.class);
+                            startActivity(intent);
+                        }
+                        return true;
+                    }
+                })
+                .build()
+                .addItem(new PrimaryDrawerItem().withName("Tutorial"));
 
 
 
